@@ -12,15 +12,15 @@ import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.util.Collector;
 
 public class WordCountSocketInStdOut {
-
     public static void main(String[] args) throws Exception {
-
         Configuration conf = new Configuration();
-        conf.setInteger(RestOptions.PORT, 8082);
+        // http://localhost:8082/#/overview
+        conf.set(RestOptions.PORT, 8082);
         StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironment(1, conf);
 
         env.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);
-        // Source
+        // Source:
+        // nc -lk 9876
         DataStream<String> stream = env.socketTextStream(JoinExample.SVR1[0], Integer.parseInt(JoinExample.SVR1[1]));
 
         // Transformations
@@ -33,7 +33,7 @@ public class WordCountSocketInStdOut {
                     String[] tokens = line.split("\\s");
                     // 输出结果 (word, 1)
                     for (String token : tokens) {
-                        if (token.length() > 0) {
+                        if (!token.isEmpty()) {
                             collector.collect(new Tuple2<>(token, 1));
                         }
                     }
