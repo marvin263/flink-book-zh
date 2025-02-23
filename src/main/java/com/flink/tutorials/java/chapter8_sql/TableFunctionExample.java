@@ -19,7 +19,7 @@ public class TableFunctionExample {
 
     public static void main(String[] args) throws Exception {
 
-        EnvironmentSettings fsSettings = EnvironmentSettings.newInstance().useBlinkPlanner().inStreamingMode().build();
+        EnvironmentSettings fsSettings = EnvironmentSettings.newInstance().inStreamingMode().build();
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         StreamTableEnvironment tEnv = StreamTableEnvironment.create(env, fsSettings);
 
@@ -38,7 +38,7 @@ public class TableFunctionExample {
                                 .withTimestampAssigner((event, timestamp) -> event.f3.getTime())
                 );
 
-        Table table = tEnv.fromDataStream(stream, "id, long, str, ts.rowtime");
+        Table table = null;//tEnv.fromDataStream(stream, "id, long, str, ts.rowtime");
 
         tEnv.createTemporaryView("input_table", table);
 

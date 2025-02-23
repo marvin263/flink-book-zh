@@ -7,7 +7,7 @@ import org.apache.flink.table.api.DataTypes;
 import org.apache.flink.table.api.EnvironmentSettings;
 import org.apache.flink.table.api.Table;
 import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
-import org.apache.flink.table.descriptors.Csv;
+import org.apache.flink.table.descriptors.OldCsv;
 import org.apache.flink.table.descriptors.FileSystem;
 import org.apache.flink.table.descriptors.Rowtime;
 import org.apache.flink.table.descriptors.Schema;
@@ -18,7 +18,7 @@ public class UserBehaviorFromFile {
 
     public static void main(String[] args) throws Exception {
 
-        EnvironmentSettings fsSettings = EnvironmentSettings.newInstance().useBlinkPlanner().inStreamingMode().build();
+        EnvironmentSettings fsSettings = EnvironmentSettings.newInstance().inStreamingMode().build();
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         StreamTableEnvironment tEnv = StreamTableEnvironment.create(env, fsSettings);
 
@@ -36,13 +36,13 @@ public class UserBehaviorFromFile {
                 .getPath();
 
         // connect()方法定义数据源未来将被废弃，以后主要使用SQL DDL
-        tEnv.connect(new FileSystem().path(filePath))
-        .withFormat(new Csv())
-        .withSchema(schema)
-        .createTemporaryTable("user_behavior");
+//        tEnv.connect(new FileSystem().path(filePath))
+//        .withFormat(new OldCsv())
+//        .withSchema(schema)
+//        .createTemporaryTable("user_behavior");
 
         Table userBehaviorTable = tEnv.from("user_behavior");
-        Table groupByUser = userBehaviorTable.groupBy("user_id").select("user_id, COUNT(behavior) as cnt");
+        //Table groupByUser = userBehaviorTable.groupBy("user_id").select("user_id, COUNT(behavior) as cnt");
 
         Table groupByUserId = tEnv.sqlQuery("SELECT user_id, COUNT(behavior) AS cnt FROM user_behavior GROUP BY user_id");
 

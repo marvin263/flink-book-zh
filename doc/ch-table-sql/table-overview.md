@@ -145,7 +145,7 @@ import org.apache.flink.table.api.java.StreamTableEnvironment;
 
 // 使用 Blink Planner 注意相应的 Planner 包要加入到 Maven 中
 EnvironmentSettings bsSettings = 
-EnvironmentSettings.newInstance().useBlinkPlanner().inStreamingMode().build();
+EnvironmentSettings.newInstance().inStreamingMode().build();
 // 基于 StreamExecutionEnvironment 创建 StreamTableEnvironment
 StreamExecutionEnvironment bsEnv = StreamExecutionEnvironment.getExecutionEnvironment();
 StreamTableEnvironment bsTableEnv = StreamTableEnvironment.create(bsEnv, bsSettings);
@@ -171,7 +171,7 @@ BatchTableEnvironment fbTableEnv = BatchTableEnvironment.create(fbEnv);
 import org.apache.flink.table.api.EnvironmentSettings;
 import org.apache.flink.table.api.TableEnvironment;
 
-EnvironmentSettings bbSettings = EnvironmentSettings.newInstance().useBlinkPlanner().inBatchMode().build();
+EnvironmentSettings bbSettings = EnvironmentSettings.newInstance().inBatchMode().build();
 TableEnvironment bbTableEnv = TableEnvironment.create(bbSettings);
 ```
 

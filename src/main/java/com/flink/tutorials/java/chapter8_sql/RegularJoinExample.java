@@ -21,7 +21,7 @@ public class RegularJoinExample {
 
         System.setProperty("user.timezone","GMT+8");
 
-        EnvironmentSettings fsSettings = EnvironmentSettings.newInstance().useBlinkPlanner().inStreamingMode().build();
+        EnvironmentSettings fsSettings = EnvironmentSettings.newInstance().inStreamingMode().build();
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         StreamTableEnvironment tEnv = StreamTableEnvironment.create(env, fsSettings);
 
@@ -48,12 +48,12 @@ public class RegularJoinExample {
                                 .withTimestampAssigner((event, timestamp) -> event.f3.getTime())
                 );
 
-        Table userBehaviorTable = tEnv.fromDataStream(userBehaviorStream, "user_id, item_id, behavior, ts.rowtime");
+        Table userBehaviorTable = null;//tEnv.fromDataStream(userBehaviorStream, "user_id, item_id, behavior, ts.rowtime");
         tEnv.createTemporaryView("user_behavior", userBehaviorTable);
 
         DataStream<Tuple2<Long, Long>> itemStream = env
                 .fromCollection(itemData);
-        Table itemTable = tEnv.fromDataStream(itemStream, "item_id, price");
+        Table itemTable = null;//tEnv.fromDataStream(itemStream, "item_id, price");
         tEnv.createTemporaryView("item", itemTable);
 
         String sqlQuery = "SELECT \n" +

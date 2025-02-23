@@ -7,7 +7,9 @@ import org.apache.flink.api.java.tuple.Tuple4;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.table.api.DataTypes;
 import org.apache.flink.table.api.EnvironmentSettings;
+import org.apache.flink.table.api.Schema;
 import org.apache.flink.table.api.Table;
 import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
 import org.apache.flink.types.Row;
@@ -20,7 +22,7 @@ public class ScalarFunctionExample {
 
     public static void main(String[] args) throws Exception {
 
-        EnvironmentSettings fsSettings = EnvironmentSettings.newInstance().useBlinkPlanner().inStreamingMode().build();
+        EnvironmentSettings fsSettings = EnvironmentSettings.newInstance().inStreamingMode().build();
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         StreamTableEnvironment tEnv = StreamTableEnvironment.create(env, fsSettings);
 
@@ -40,7 +42,15 @@ public class ScalarFunctionExample {
                                 .withTimestampAssigner((event, timestamp) -> event.f3.getTime())
                 );
 
-        Table geoTable = tEnv.fromDataStream(geoStream, "id, long, alt, ts.rowtime, proc.proctime");
+        Table geoTable = tEnv.fromDataStream(geoStream,
+                Schema.newBuilder()
+                        .column("item_id", DataTypes.INT())
+                        .column("category_id", DataTypes.INT())
+                        .column("sales", DataTypes.INT())
+                        .column("ts.proctime", DataTypes.INT())
+                        .build());
+                
+                //"id, long, alt, ts.rowtime, proc.proctime");
 
         tEnv.createTemporaryView("geo", geoTable);
 
@@ -71,7 +81,14 @@ public class ScalarFunctionExample {
                                 .withTimestampAssigner((event, timestamp) -> event.f3.getTime())
                 );
 
-        Table geoStrTable = tEnv.fromDataStream(geoStrStream, "id, long, alt, ts.rowtime, proc.proctime");
+        Table geoStrTable = tEnv.fromDataStream(geoStrStream,
+                Schema.newBuilder()
+                        .column("item_id", DataTypes.INT())
+                        .column("category_id", DataTypes.INT())
+                        .column("sales", DataTypes.INT())
+                        .column("ts.proctime", DataTypes.INT())
+                        .build());
+                //"id, long, alt, ts.rowtime, proc.proctime");
 
         tEnv.createTemporaryView("geo_str", geoStrTable);
         Table inFourRingStrTab = tEnv.sqlQuery("SELECT id FROM geo_str WHERE IsInFourRing(long, alt)");

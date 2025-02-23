@@ -5,7 +5,9 @@ import org.apache.flink.api.java.tuple.Tuple4;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.table.api.DataTypes;
 import org.apache.flink.table.api.EnvironmentSettings;
+import org.apache.flink.table.api.Schema;
 import org.apache.flink.table.api.Table;
 import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
 import org.apache.flink.types.Row;
@@ -18,7 +20,7 @@ public class SystemFunctionExample {
 
     public static void main(String[] args) throws Exception {
 
-        EnvironmentSettings fsSettings = EnvironmentSettings.newInstance().useBlinkPlanner().inStreamingMode().build();
+        EnvironmentSettings fsSettings = EnvironmentSettings.newInstance().inStreamingMode().build();
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         StreamTableEnvironment tEnv = StreamTableEnvironment.create(env, fsSettings);
 
@@ -40,7 +42,16 @@ public class SystemFunctionExample {
                                 .withTimestampAssigner((event, timestamp) -> event.f3.getTime())
                 );
 
-        Table userBehaviorTable = tEnv.fromDataStream(userBehaviorStream, "user_id, item_id, behavior,ts.rowtime");
+        Table userBehaviorTable = tEnv.fromDataStream(userBehaviorStream,
+                Schema.newBuilder()
+                        .column("item_id", DataTypes.INT())
+                        .column("category_id", DataTypes.INT())
+                        .column("sales", DataTypes.INT())
+                        .column("ts.proctime", DataTypes.INT())
+                        .build());
+                
+                
+               // "user_id, item_id, behavior,ts.rowtime");
 
         tEnv.createTemporaryView("user_behavior", userBehaviorTable);
 

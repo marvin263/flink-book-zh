@@ -16,7 +16,7 @@ public class UserBehaviorFromDataStream {
 
     public static void main(String[] args) throws Exception {
 
-        EnvironmentSettings fsSettings = EnvironmentSettings.newInstance().useBlinkPlanner().inStreamingMode().build();
+        EnvironmentSettings fsSettings = EnvironmentSettings.newInstance().inStreamingMode().build();
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         StreamTableEnvironment tEnv = StreamTableEnvironment.create(env, fsSettings);
 
@@ -31,7 +31,7 @@ public class UserBehaviorFromDataStream {
                                 .withTimestampAssigner((event, timestamp) -> event.timestamp)
                 );
 
-        tEnv.createTemporaryView("user_behavior", userBehaviorDataStream, "userId as user_id, itemId as item_id, categoryId as category_id, behavior, ts.rowtime");
+        //tEnv.createTemporaryView("user_behavior", userBehaviorDataStream, "userId as user_id, itemId as item_id, categoryId as category_id, behavior, ts.rowtime");
 
         Table tumbleGroupByUserId = tEnv.sqlQuery("SELECT " +
                 "user_id, " +

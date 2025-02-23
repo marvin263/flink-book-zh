@@ -4,7 +4,9 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.table.api.DataTypes;
 import org.apache.flink.table.api.EnvironmentSettings;
+import org.apache.flink.table.api.Schema;
 import org.apache.flink.table.api.Table;
 import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
 import org.apache.flink.types.Row;
@@ -15,7 +17,7 @@ import java.util.List;
 public class SalesTopNExample {
 
     public static void main(String[] args) throws Exception {
-        EnvironmentSettings fsSettings = EnvironmentSettings.newInstance().useBlinkPlanner().inStreamingMode().build();
+        EnvironmentSettings fsSettings = EnvironmentSettings.newInstance().inStreamingMode().build();
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         StreamTableEnvironment tEnv = StreamTableEnvironment.create(env, fsSettings);
 
@@ -28,7 +30,13 @@ public class SalesTopNExample {
         itemList.add(Tuple3.of(6L, 99L, 989L));
 
         DataStream<Tuple3<Long, Long, Long>> itemSalesStream = env.fromCollection(itemList);
-        Table itemSalesTable = tEnv.fromDataStream(itemSalesStream, "item_id, category_id, sales, time.proctime");
+        Table itemSalesTable = tEnv.fromDataStream(itemSalesStream,
+                Schema.newBuilder()
+                        .column("item_id", DataTypes.INT())
+                        .column("category_id", DataTypes.INT())
+                        .column("sales", DataTypes.INT())
+                        .column("ts.proctime", DataTypes.INT())
+                        .build());
 
         tEnv.createTemporaryView("sales", itemSalesTable);
 

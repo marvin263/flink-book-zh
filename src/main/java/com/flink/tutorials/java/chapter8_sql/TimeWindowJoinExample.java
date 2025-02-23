@@ -21,7 +21,7 @@ public class TimeWindowJoinExample {
 
         System.setProperty("user.timezone","GMT+8");
 
-        EnvironmentSettings fsSettings = EnvironmentSettings.newInstance().useBlinkPlanner().inStreamingMode().build();
+        EnvironmentSettings fsSettings = EnvironmentSettings.newInstance().inStreamingMode().build();
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         StreamTableEnvironment tEnv = StreamTableEnvironment.create(env, fsSettings);
 
@@ -48,7 +48,7 @@ public class TimeWindowJoinExample {
                                 .withTimestampAssigner((event, timestamp) -> event.f3.getTime())
                 );
 
-        Table userBehaviorTable = tEnv.fromDataStream(userBehaviorStream, "user_id, item_id, behavior,ts.rowtime");
+        Table userBehaviorTable = null;//tEnv.fromDataStream(userBehaviorStream, "user_id, item_id, behavior,ts.rowtime");
         tEnv.createTemporaryView("user_behavior", userBehaviorTable);
 
         DataStream<Tuple3<Long, Long, Timestamp>> chatStream = env
@@ -59,7 +59,7 @@ public class TimeWindowJoinExample {
                                 .withTimestampAssigner((event, timestamp) -> event.f2.getTime())
                 );
 
-        Table chatTable = tEnv.fromDataStream(chatStream, "buyer_id, item_id, ts.rowtime");
+        Table chatTable = null;//tEnv.fromDataStream(chatStream, "buyer_id, item_id, ts.rowtime");
         tEnv.createTemporaryView("chat", chatTable);
 
         String sqlQuery = "SELECT \n" +

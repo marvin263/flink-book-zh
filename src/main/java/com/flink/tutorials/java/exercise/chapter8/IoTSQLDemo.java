@@ -11,7 +11,7 @@ public class IoTSQLDemo {
 
     public static void main(String[] args) throws Exception {
 
-        EnvironmentSettings fsSettings = EnvironmentSettings.newInstance().useBlinkPlanner().inStreamingMode().build();
+        EnvironmentSettings fsSettings = EnvironmentSettings.newInstance().inStreamingMode().build();
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         StreamTableEnvironment tEnv = StreamTableEnvironment.create(env, fsSettings);
 
@@ -87,9 +87,9 @@ public class IoTSQLDemo {
                 "GROUP BY room, TUMBLE(ts, INTERVAL '1' MINUTE)");
 
         // 注册 Temporal Table Function
-        tEnv.registerFunction(
-                "env_table_func",
-                e.createTemporalTableFunction("ts", "room"));
+//        tEnv.registerFunction(
+//                "env_table_func",
+//                e.createTemporalTableFunction("ts", "room"));
 
         String sqlQuery = "INSERT INTO sensor_env_data\n" +
                 "SELECT \n" +

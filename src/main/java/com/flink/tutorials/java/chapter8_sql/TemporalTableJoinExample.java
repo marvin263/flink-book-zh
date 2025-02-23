@@ -6,7 +6,9 @@ import org.apache.flink.api.java.tuple.Tuple4;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.table.api.DataTypes;
 import org.apache.flink.table.api.EnvironmentSettings;
+import org.apache.flink.table.api.Schema;
 import org.apache.flink.table.api.Table;
 import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
 import org.apache.flink.types.Row;
@@ -19,7 +21,7 @@ public class TemporalTableJoinExample {
 
     public static void main(String[] args) throws Exception {
 
-        EnvironmentSettings fsSettings = EnvironmentSettings.newInstance().useBlinkPlanner().inStreamingMode().build();
+        EnvironmentSettings fsSettings = EnvironmentSettings.newInstance().inStreamingMode().build();
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         StreamTableEnvironment tEnv = StreamTableEnvironment.create(env, fsSettings);
 
@@ -48,7 +50,16 @@ public class TemporalTableJoinExample {
                                 .withTimestampAssigner((event, timestamp) -> event.f3.getTime())
                 );
 
-        Table userBehaviorTable = tEnv.fromDataStream(userBehaviorStream, "user_id, item_id, behavior,ts.rowtime");
+        Table userBehaviorTable = tEnv.fromDataStream(userBehaviorStream,
+
+                Schema.newBuilder()
+                        .column("item_id", DataTypes.INT())
+                        .column("category_id", DataTypes.INT())
+                        .column("sales", DataTypes.INT())
+                        .column("ts.proctime", DataTypes.INT())
+                        .build());
+                
+                //"user_id, item_id, behavior,ts.rowtime");
         tEnv.createTemporaryView("user_behavior", userBehaviorTable);
 
         DataStream<Tuple3<Long, Long, Timestamp>> itemStream = env
@@ -58,12 +69,20 @@ public class TemporalTableJoinExample {
                                 .<Tuple3<Long, Long, Timestamp>>forMonotonousTimestamps()
                                 .withTimestampAssigner((event, timestamp) -> event.f2.getTime())
                 );
-        Table itemTable = tEnv.fromDataStream(itemStream, "item_id, price, versionTs.rowtime");
+        Table itemTable = tEnv.fromDataStream(itemStream,
+
+                Schema.newBuilder()
+                        .column("item_id", DataTypes.INT())
+                        .column("category_id", DataTypes.INT())
+                        .column("sales", DataTypes.INT())
+                        .column("ts.proctime", DataTypes.INT())
+                        .build());
+        //"item_id, price, versionTs.rowtime");
 
         // 注册 Temporal Table Function
-        tEnv.registerFunction(
-                "item",
-                itemTable.createTemporalTableFunction("versionTs", "item_id"));
+//        tEnv.registerFunction(
+//                "item",
+//                itemTable.createTemporalTableFunction("versionTs", "item_id"));
 
         String sqlQuery = "SELECT \n" +
                 "   user_behavior.item_id," +
