@@ -27,7 +27,7 @@ public class IntervalJoinExample {
         // 数据流有三个字段：（key, 时间戳, 数值）
         DataStream<Tuple3<String, Long, Integer>> input1 = socketSource1.map(
                 line -> {
-                    String[] arr = line.split(" ");
+                    String[] arr = line.split(" +");
                     String id = arr[0];
                     long ts = Long.parseLong(arr[1]);
                     int i = Integer.parseInt(arr[2]);
@@ -41,7 +41,7 @@ public class IntervalJoinExample {
 
         DataStream<Tuple3<String, Long, Integer>> input2 = socketSource2.map(
                 line -> {
-                    String[] arr = line.split(" ");
+                    String[] arr = line.split(" +");
                     String id = arr[0];
                     long ts = Long.parseLong(arr[1]);
                     int i = Integer.parseInt(arr[2]);

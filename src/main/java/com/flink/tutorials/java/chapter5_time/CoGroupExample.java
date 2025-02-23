@@ -23,7 +23,7 @@ public class CoGroupExample {
 
         DataStream<Tuple2<String, Integer>> input1 = socketSource1.map(
                         line -> {
-                            String[] arr = line.split(" ");
+                            String[] arr = line.split(" +");
                             String id = arr[0];
                             int t = Integer.parseInt(arr[1]);
                             return Tuple2.of(id, t);
@@ -31,7 +31,7 @@ public class CoGroupExample {
                 .returns(Types.TUPLE(Types.STRING, Types.INT));
         DataStream<Tuple2<String, Integer>> input2 = socketSource2.map(
                         line -> {
-                            String[] arr = line.split(" ");
+                            String[] arr = line.split(" +");
                             String id = arr[0];
                             int t = Integer.parseInt(arr[1]);
                             return Tuple2.of(id, t);

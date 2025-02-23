@@ -35,7 +35,7 @@ public class FlatMapExample {
         // 最后输出为 ["Hello", "World", "Hello", "this", "is", "Flink"]
         DataStream<String> words = dataStream.flatMap (
                 (String input, Collector<String> collector) -> {
-                    for (String word : input.split(" ")) {
+                    for (String word : input.split(" +")) {
                         collector.collect(word);
                     }
                 }).returns(Types.STRING);
@@ -48,7 +48,7 @@ public class FlatMapExample {
             @Override
             public void flatMap(String input, Collector<String> collector) throws Exception {
                 if (input.length() > 15) {
-                    for (String word: input.split(" "))
+                    for (String word: input.split(" +"))
                         collector.collect(word);
                 }
             }
@@ -85,7 +85,7 @@ public class FlatMapExample {
         @Override
         public void flatMap(String input, Collector<String> collector) throws Exception {
             if (input.length() > limit) {
-                for (String word: input.split(" "))
+                for (String word: input.split(" +"))
                     collector.collect(word);
             }
         }
@@ -121,7 +121,7 @@ public class FlatMapExample {
             this.numOfLines.add(1);
 
             if(input.length() > limit) {
-                for (String word: input.split(" "))
+                for (String word: input.split(" +"))
                     collector.collect(word);
             }
         }

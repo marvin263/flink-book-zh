@@ -28,7 +28,7 @@ public class JoinExample {
         DataStream<Tuple2<String, Integer>> input1 = socketSource1.map(
                         line -> {
                             System.out.println("input1:" + line);
-                            String[] arr = line.split(" ");
+                            String[] arr = line.split(" +");
                             String id = arr[0];
                             int t = Integer.parseInt(arr[1]);
                             return Tuple2.of(id, t);
@@ -38,7 +38,7 @@ public class JoinExample {
         DataStream<Tuple2<String, Integer>> input2 = socketSource2.map(
                         line -> {
                             System.out.println("input2:" + line);
-                            String[] arr = line.split(" ");
+                            String[] arr = line.split(" +");
                             String id = arr[0];
                             int t = Integer.parseInt(arr[1]);
                             return Tuple2.of(id, t);
