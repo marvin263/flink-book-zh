@@ -197,7 +197,7 @@ under the License.
             <plugin>
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>
-                <!--				<version>3.2.2</version>-->
+                <version>3.2.2</version>
                 <configuration>
                     <args>
                         <arg>-target:jvm-1.8</arg>
