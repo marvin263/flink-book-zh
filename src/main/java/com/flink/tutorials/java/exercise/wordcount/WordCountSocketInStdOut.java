@@ -1,5 +1,6 @@
 package com.flink.tutorials.java.exercise.wordcount;
 
+import com.flink.tutorials.java.chapter5_time.JoinExample;
 import org.apache.flink.api.common.typeinfo.Types;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.configuration.Configuration;
@@ -20,7 +21,7 @@ public class WordCountSocketInStdOut {
 
         env.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);
         // Source
-        DataStream<String> stream = env.socketTextStream("localhost", 9000);
+        DataStream<String> stream = env.socketTextStream(JoinExample.SVR1[0], Integer.parseInt(JoinExample.SVR1[1]));
 
         // Transformations
         // use Flink API to process text stream

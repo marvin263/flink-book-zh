@@ -21,8 +21,8 @@ public class IntervalJoinExample {
         // 使用EventTime时间语义
         //env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
 
-        DataStream<String> socketSource1 = env.socketTextStream("localhost", 9000);
-        DataStream<String> socketSource2 = env.socketTextStream("localhost", 9001);
+        DataStream<String> socketSource1 = env.socketTextStream(JoinExample.SVR1[0], Integer.parseInt(JoinExample.SVR1[1]));
+        DataStream<String> socketSource2 = env.socketTextStream(JoinExample.SVR2[0], Integer.parseInt(JoinExample.SVR2[1]));
 
         // 数据流有三个字段：（key, 时间戳, 数值）
         DataStream<Tuple3<String, Long, Integer>> input1 = socketSource1.map(
