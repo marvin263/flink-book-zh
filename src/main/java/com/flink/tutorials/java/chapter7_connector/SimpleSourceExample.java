@@ -13,7 +13,7 @@ public class SimpleSourceExample {
 
         Configuration conf = new Configuration();
         // 访问 http://localhost:8082 可以看到Flink Web UI
-        conf.setInteger(RestOptions.PORT, 8082);
+        conf.set(RestOptions.PORT, 8082);
         // 创建本地执行环境，并行度为2
         StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironment(2, conf);
         DataStream<Tuple2<String, Integer>> countStream = env.addSource(new SimpleSource());

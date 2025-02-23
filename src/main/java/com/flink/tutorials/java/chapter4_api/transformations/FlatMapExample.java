@@ -24,7 +24,7 @@ public class FlatMapExample {
 
         StreamExecutionEnvironment senv = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        DataStream<String> dataStream = senv.fromElements("Hello World", "Hello this is Flink");
+        DataStream<String> dataStream = senv.fromData("Hello World", "Hello this is Flink");
 
         // String.split() takes "Hello World" as input,
         // and return a list (["Hello", "World"]) as output.

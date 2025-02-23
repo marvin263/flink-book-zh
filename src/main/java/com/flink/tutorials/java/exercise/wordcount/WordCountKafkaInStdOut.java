@@ -18,7 +18,7 @@ public class WordCountKafkaInStdOut {
          StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 //        Configuration conf = new Configuration();
 //        // For Flink Web UI, open the link in your broswer http://localhost:8082
-//        conf.setInteger(RestOptions.PORT, 8082);
+//        conf.set(RestOptions.PORT, 8082);
 //        // create local StreamExecutionEnvironment with parallelism setted as 2
 //        StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironment(2, conf);
 

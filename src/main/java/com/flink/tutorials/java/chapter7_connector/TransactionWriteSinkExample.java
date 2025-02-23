@@ -22,7 +22,7 @@ public class TransactionWriteSinkExample {
 
         Configuration conf = new Configuration();
         // 访问 http://localhost:8082 可以看到Flink Web UI
-        conf.setInteger(RestOptions.PORT, 8082);
+        conf.set(RestOptions.PORT, 8082);
         // 创建本地执行环境，并行度为1
         StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironment(1, conf);
         // 每隔5秒进行一次Checkpoint

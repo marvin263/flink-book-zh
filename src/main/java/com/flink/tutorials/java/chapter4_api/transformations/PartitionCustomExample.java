@@ -30,7 +30,7 @@ public class PartitionCustomExample {
         // 设置所有算子的并行度为4，表示所有算子的并行执行的算子子任务数为4
         senv.setParallelism(4);
 
-        DataStream<Tuple2<Integer, String>> dataStream = senv.fromElements(
+        DataStream<Tuple2<Integer, String>> dataStream = senv.fromData(
                 Tuple2.of(1, "123"), Tuple2.of(2, "abc"),
                 Tuple2.of(3, "256"), Tuple2.of(4, "zyx"),
                 Tuple2.of(5, "bcd"), Tuple2.of(6, "666"));

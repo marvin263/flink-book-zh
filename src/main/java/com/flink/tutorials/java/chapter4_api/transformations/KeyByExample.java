@@ -19,7 +19,7 @@ public class KeyByExample {
 
         StreamExecutionEnvironment senv = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        DataStream<Tuple2<Integer, Double>> dataStream = senv.fromElements(
+        DataStream<Tuple2<Integer, Double>> dataStream = senv.fromData(
                 Tuple2.of(1, 1.0), Tuple2.of(2, 3.2), Tuple2.of(1, 5.5),
                 Tuple2.of(3, 10.0), Tuple2.of(3, 12.5));
 
@@ -27,10 +27,10 @@ public class KeyByExample {
         // deprecated after Flink 1.11
         // 使用数字位置定义Key 按照第一个字段进行分组
         // Flink 1.11开始废弃了这个方法
-        DataStream<Tuple2<Integer, Double>> keyedStream = dataStream.keyBy(0).sum(1);
+        DataStream<Tuple2<Integer, Double>> keyedStream = dataStream.keyBy(e->e.f0).sum(1);
         keyedStream.print();
 
-        DataStream<Word> wordStream = senv.fromElements(
+        DataStream<Word> wordStream = senv.fromData(
                 Word.of("Hello", 1), Word.of("Flink", 1),
                 Word.of("Hello", 2), Word.of("Flink", 2)
         );

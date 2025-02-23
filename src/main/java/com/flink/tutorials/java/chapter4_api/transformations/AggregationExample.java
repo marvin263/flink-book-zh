@@ -13,7 +13,7 @@ public class AggregationExample {
     public static void main(String[] args) throws Exception {
 
         StreamExecutionEnvironment senv = StreamExecutionEnvironment.getExecutionEnvironment();
-        DataStream<Tuple3<Integer, Integer, Integer>> tupleStream = senv.fromElements(
+        DataStream<Tuple3<Integer, Integer, Integer>> tupleStream = senv.fromData(
                 Tuple3.of(0, 0, 0), Tuple3.of(0, 1, 1), Tuple3.of(0, 2, 2),
                 Tuple3.of(1, 0, 6), Tuple3.of(1, 1, 7), Tuple3.of(1, 0, 8));
 

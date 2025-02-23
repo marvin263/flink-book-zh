@@ -35,7 +35,7 @@ public class BroadcastStateExample {
                 );
 
         // BehaviorPattern数据流
-        DataStream<BehaviorPattern> patternStream = env.fromElements(new BehaviorPattern("pv", "buy"));
+        DataStream<BehaviorPattern> patternStream = env.fromData(new BehaviorPattern("pv", "buy"));
 
         // Broadcast State只能使用 Key->Value 结构，基于MapStateDescriptor
         MapStateDescriptor<Void, BehaviorPattern> broadcastStateDescriptor = new MapStateDescriptor<>("behaviorPattern", Types.VOID, Types.POJO(BehaviorPattern.class));
