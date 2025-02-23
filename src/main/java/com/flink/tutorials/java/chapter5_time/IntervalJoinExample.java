@@ -19,7 +19,7 @@ public class IntervalJoinExample {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
         // 使用EventTime时间语义
-        env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+        //env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
 
         DataStream<String> socketSource1 = env.socketTextStream("localhost", 9000);
         DataStream<String> socketSource2 = env.socketTextStream("localhost", 9001);
