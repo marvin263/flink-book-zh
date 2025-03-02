@@ -27,7 +27,7 @@ public class StudentScoreAverage {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(conf);
 
         // 2. 连接 Socket。通过 nc -lk 9876 命令来模拟输入
-        DataStream<String> input = env.socketTextStream(JoinExample.SVR1[0], Integer.parseInt(JoinExample.SVR1[1]));
+        DataStream<String> input = env.socketTextStream("localhost", Integer.parseInt(JoinExample.SVR1[1]));
 
         // 3. 接收输入并解析
         //    假设每行格式： Tom 82
@@ -88,10 +88,10 @@ public class StudentScoreAverage {
     }
 
     public static class MyTumblingWindowAssigner extends WindowAssigner<Object, TimeWindow> {
-        private final long windowSize; // 窗口长度，毫秒级
+        private final long windowDurationInMillis; // 窗口长度，毫秒级
 
-        public MyTumblingWindowAssigner(long windowSize) {
-            this.windowSize = windowSize;
+        public MyTumblingWindowAssigner(long windowDurationInMillis) {
+            this.windowDurationInMillis = windowDurationInMillis;
         }
 
         @Override
@@ -99,8 +99,8 @@ public class StudentScoreAverage {
             // 获取当前处理时间
             long currentProcessingTime = context.getCurrentProcessingTime();
             // 计算窗口起始和结束
-            long start = currentProcessingTime - (currentProcessingTime % windowSize);
-            long end = start + windowSize;
+            long start = currentProcessingTime - (currentProcessingTime % windowDurationInMillis);
+            long end = start + windowDurationInMillis;
             // 将此元素放入 [start, end) 的窗口中
             return Collections.singletonList(new TimeWindow(start, end));
         }
