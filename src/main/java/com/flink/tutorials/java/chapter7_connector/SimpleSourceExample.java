@@ -6,11 +6,11 @@ import org.apache.flink.configuration.RestOptions;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
+import org.apache.flink.table.sources.wmstrategies.WatermarkStrategy;
 
 public class SimpleSourceExample {
 
     public static void main(String[] args) throws Exception {
-
         Configuration conf = new Configuration();
         // 访问 http://localhost:8082 可以看到Flink Web UI
         conf.set(RestOptions.PORT, 8082);
@@ -31,10 +31,10 @@ public class SimpleSourceExample {
         @Override
         public void run(SourceContext<Tuple2<String, Integer>> ctx) throws Exception {
             while (isRunning) {
-                Thread.sleep(500);
+                Thread.sleep(1500);
                 ctx.collect(new Tuple2<>("" + offset, offset));
                 offset++;
-                if (offset == 1000) {
+                if (offset == 100000000) {
                     isRunning = false;
                 }
             }

@@ -14,8 +14,8 @@ public class JoinExample {
     // 在 192.168.86.135 运行：
     // nc -lk 9876
     // nc -lk 9875
-    public static final String[] SVR1 = {"192.168.86.135", "9876"};
-    public static final String[] SVR2 = {"192.168.86.135", "9875"};
+    public static final String[] SVR1 = {"192.168.86.155", "9876"};
+    public static final String[] SVR2 = {"192.168.86.155", "9875"};
 
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
