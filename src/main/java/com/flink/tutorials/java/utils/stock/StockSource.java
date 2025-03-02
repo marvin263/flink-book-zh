@@ -20,7 +20,6 @@ public class StockSource implements SourceFunction<StockPrice> {
     public StockSource(String path) {
         this.path = path;
     }
-
     @Override
     public void run(SourceContext<StockPrice> sourceContext) throws Exception {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd HHmmss");
@@ -33,14 +32,14 @@ public class StockSource implements SourceFunction<StockPrice> {
         long lastEventTs = 0;
         while (isRunning && (line = br.readLine()) != null) {
             String[] itemStrArr = line.split(",");
-            LocalDateTime dateTime = LocalDateTime.parse(itemStrArr[1] + " " + itemStrArr[2], formatter);
+            LocalDateTime dateTime = LocalDateTime.parse(itemStrArr[StockPrice.IDX_YYYYMMDD] + " " + itemStrArr[StockPrice.IDX_HHMMSS], formatter);
             long eventTs = Timestamp.valueOf(dateTime).getTime();
             if (isFirstLine) {
                 // 从第一行数据提取时间戳
                 lastEventTs = eventTs;
                 isFirstLine = false;
             }
-            StockPrice stock = StockPrice.of(itemStrArr[0], Double.parseDouble(itemStrArr[3]), eventTs, Integer.parseInt(itemStrArr[4]));
+            StockPrice stock = StockPrice.of(itemStrArr[StockPrice.IDX_SYMBOL], Double.parseDouble(itemStrArr[StockPrice.IDX_PRICE]), eventTs, Integer.parseInt(itemStrArr[StockPrice.IDX_VOLUME]));
             // 输入文件中的时间戳是从小到大排列的
             // 新读入的行如果比上一行大，sleep，这样来模拟一个有时间间隔的输入流
             timeDiff = eventTs - lastEventTs;
