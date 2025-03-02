@@ -80,7 +80,7 @@ public class PartitionStrategiesDemo {
         DataStream<SensorReading> shuffleStream = sensorStream
                 .shuffle()
                 .map(new TagMapFunction("After-Shuffle"))
-                .name("shuffle-map");
+                .name("1-shuffle-map");
 
         // 3.2 forward：需要上下游并行度一致才能生效，否则自动退化为 shuffle
         //     这里下游我们改为并行度2，对比上游并行度4，不完全匹配
@@ -89,19 +89,19 @@ public class PartitionStrategiesDemo {
                 .forward()
                 .map(new TagMapFunction("After-Forward"))
                 .setParallelism(4)
-                .name("forward-map");
+                .name("2-forward-map");
 
         // 3.3 rebalance：按 round-robin(轮询) 将数据分发，常用于负载均衡
         DataStream<SensorReading> rebalanceStream = forwardStream
                 .rebalance()
                 .map(new TagMapFunction("After-Rebalance"))
-                .name("rebalance-map");
+                .name("3-rebalance-map");
 
         // 3.4 rescale：在本分区内轮询到下游并行子任务
         DataStream<SensorReading> rescaleStream = rebalanceStream
                 .rescale()
                 .map(new TagMapFunction("After-Rescale"))
-                .name("rescale-map");
+                .name("4-rescale-map");
 
         // 4) 演示 broadcast + connect：
         //    通常只广播“配置流”，主数据流保持普通 DataStream，即可 connect() 得到 BroadcastConnectedStream。
@@ -129,7 +129,7 @@ public class PartitionStrategiesDemo {
         DataStream<SensorReading> globalStream = processedBroadcast
                 .global()
                 .map(new TagMapFunction("After-Global"))
-                .name("global-map");
+                .name("5-global-map");
 
         // 6) union：把多个相同类型的 DataStream 合并为一个
         DataStream<SensorReading> extraStream = env.fromData(
@@ -148,7 +148,8 @@ public class PartitionStrategiesDemo {
 
         DataStream<SensorReading> unionStream = globalStream
                 .union(extraStream)
-                .map(new TagMapFunction("After-Union"));
+                .map(new TagMapFunction("After-Union"))
+                .name("6-union-map");
 
         // 7) keyBy：对相同 key 做哈希分区，一般用于聚合或有状态函数
         //    这里示例对同一 sensorId 的温度进行简单 average
