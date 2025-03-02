@@ -25,7 +25,7 @@ public class AggregateFunctionExample {
     public static void main(String[] args) throws Exception {
         // 1. 创建执行环境
         Configuration conf = new Configuration();
-        // For Flink Web UI, open the link in your broswer http://localhost:8082
+        // For Flink Web UI, open the link in your browser http://localhost:8082
         conf.set(RestOptions.PORT, 8082);
         StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(conf);
         // 建议在高并发场景下根据实际情况配置并行度
@@ -100,9 +100,11 @@ public class AggregateFunctionExample {
 
     /**
      * 接收三个泛型：
+     * <pre>
      * IN: StockPrice
      * ACC：(String, Double, Int) - (symbol, sum, count)
      * OUT: (String, Double) - (symbol, average)
+     * </pre>
      */
     public static class AverageAggregate implements AggregateFunction<StockPrice, Tuple3<String, Double, Integer>, Tuple2<String, Double>> {
 
