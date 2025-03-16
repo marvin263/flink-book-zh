@@ -57,8 +57,10 @@ public class PartitionStrategiesDemo {
         // 1. 创建执行环境
         Configuration conf = new Configuration();
         // For Flink Web UI, open the link in your browser http://localhost:8082
-        conf.set(RestOptions.PORT, 8082);
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(conf);
+        //conf.set(RestOptions.PORT, 8082);
+        //StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(conf);
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        
         env.setParallelism(4);
 
         // 2. 构建源: 无限传感器数据流 (普通 DataStream)

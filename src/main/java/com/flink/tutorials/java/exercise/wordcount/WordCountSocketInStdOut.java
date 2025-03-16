@@ -16,8 +16,8 @@ public class WordCountSocketInStdOut {
         Configuration conf = new Configuration();
         // http://localhost:8082/#/overview
         conf.set(RestOptions.PORT, 8082);
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironment(1, conf);
-
+        //StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironment(1, conf);
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);
         // Source:
         // nc -lk 9876
